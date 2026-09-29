@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HackTrack</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <img src="../icons/icon48.png" alt="HackTrack" class="brand-icon">
+        <div class="brand-text">
+          <h1>HackTrack</h1>
+          <span class="tagline">Universal Hackathon Tracker</span>
+        </div>
+      </div>
+      <div id="platformBadge" class="platform-badge generic">Detecting...</div>
+    </header>
+
+    <!-- Nav Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="track">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Current Page
+      </button>
+      <button class="nav-tab" data-tab="list">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        My Tracked <span id="trackedCountBadge" class="count-badge">0</span>
+      </button>
+      <button class="nav-tab" data-tab="settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </nav>
+
+    <!-- TAB 1: Track Current Page -->
+    <main id="tabTrack" class="tab-content active">
+      <div id="statusNotice" class="status-notice hidden"></div>
+
+      <div class="form-group">
+        <label for="hackathonTitle">Hackathon Title</label>
+        <input type="text" id="hackathonTitle" placeholder="e.g. Smart India Hackathon 2026">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="hackathonPlatform">Platform</label>
+          <input type="text" id="hackathonPlatform" placeholder="Unstop, Devfolio, etc.">
+        </div>
+        <div class="form-group flex-2">
+          <label for="hackathonUrl">Page URL</label>
+          <input type="text" id="hackathonUrl" placeholder="https://...">
+        </div>
+      </div>
+
+      <!-- Rounds / Milestones Container -->
+      <div class="rounds-section">
+        <div class="section-header">
+          <label>Rounds & Deadlines</label>
+          <button type="button" id="btnAddRound" class="btn-text">+ Add Round</button>
+        </div>
+        <div id="roundsList" class="rounds-list">
+          <!-- Dynamic round cards inserted here -->
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-grid">
+        <button id="btnSave" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save & Set Reminders
+        </button>
+      </div>
+
+      <div class="quick-export-row">
+        <button id="btnQuickGCal" class="btn btn-outline" title="Open Google Calendar with prefilled 3 alarms">
+          📅 Google Calendar
+        </button>
+        <button id="btnQuickWhatsApp" class="btn btn-outline" title="Share formatted alert to WhatsApp group">
+          💬 WhatsApp
+        </button>
+        <button id="btnQuickIcs" class="btn btn-outline" title="Download .ics file for Apple/Outlook/Google Calendar">
+          📥 .ICS File
+        </button>
+      </div>
+    </main>
+
+    <!-- TAB 2: My Tracked Hackathons -->
+    <section id="tabList" class="tab-content">
+      <div class="search-filter-bar">
+        <input type="text" id="searchInput" placeholder="Search hackathons...">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="upcoming">Active</button>
+          <button class="filter-pill" data-filter="completed">Done</button>
+        </div>
+      </div>
+
+      <div id="hackathonsContainer" class="hackathons-container">
+        <!-- Rendered Hackathon Cards -->
+      </div>
+    </section>
+
+    <!-- TAB 3: Settings -->
+    <section id="tabSettings" class="tab-content">
+      <div class="settings-group">
+        <h3>🔔 Reminder Alarms (Desktop & Phone)</h3>
+        <label class="toggle-row">
+          <span>24 Hours before deadline</span>
+          <input type="checkbox" id="setNotify24h" checked>
+        </label>
+        <label class="toggle-row">
+          <span>3 Hours before deadline (Urgent!)</span>
+          <input type="checkbox" id="setNotify3h" checked>
+        </label>
+        <label class="toggle-row">
+          <span>30 Minutes before (Last Call)</span>
+          <input type="checkbox" id="setNotify30m" checked>
+        </label>
+        <label class="toggle-row">
+          <span>At Deadline moment</span>
+          <input type="checkbox" id="setNotifyDue" checked>
+        </label>
+      </div>
+
+      <div class="settings-group">
+        <h3>👥 Team WhatsApp Contacts</h3>
+        <p class="settings-hint">Save your teammates' WhatsApp numbers for 1-click direct alerts!</p>
+        
+        <div class="add-teammate-row">
+          <input type="text" id="inputTeammateName" placeholder="Name (e.g. Rahul)" class="flex-1">
+          <input type="text" id="inputTeammatePhone" placeholder="WA Number (+91...)" class="flex-1">
+          <button id="btnAddTeammate" class="btn btn-secondary btn-sm">+ Add</button>
+        </div>
+
+        <div id="teammatesList" class="teammates-list">
+          <!-- Rendered teammate cards -->
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>💾 Data & Backup</h3>
+        <div class="btn-group-column">
+          <button id="btnExportJson" class="btn btn-secondary">Export All Hackathons (JSON)</button>
+          <button id="btnClearCompleted" class="btn btn-danger-outline">Clear Completed Hackathons</button>
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <p>Built with ❤️ for student hackers & developers</p>
+        <span class="version">HackTrack v1.0.0</span>
+      </div>
+    </section>
+
+    <!-- WhatsApp Recipient Selector Modal -->
+    <div id="waModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>💬 Send WhatsApp Alert</h3>
+          <button id="btnCancelWaModal" class="btn-close-modal">✕</button>
+        </div>
+        <div class="auto-send-badge">
+          ⚡ <strong>Auto-Send Enabled:</strong> HackTrack will auto-click Send in WhatsApp Web!
+        </div>
+
+        <div class="wa-options-list">
+          <div class="wa-teammates-header">
+            <span>Select Teammate:</span>
+          </div>
+
+          <div id="waModalTeammatesList" class="wa-modal-teammates">
+            <!-- Dynamic teammate buttons -->
+          </div>
+
+          <button class="wa-option-btn broadcast-option" id="btnWaBroadcast">
+            <span class="wa-option-icon">📢</span>
+            <div class="wa-option-text">
+              <strong>Send to ALL Teammates</strong>
+              <span>Sends alert to every saved teammate</span>
+            </div>
+          </button>
+
+          <!-- Quick Direct Phone Input -->
+          <div class="quick-wa-input-box">
+            <label style="font-size:11px; color:#cbd5e1; margin-bottom:4px; display:block;">Or Enter Teammate's WhatsApp Number:</label>
+            <div class="add-teammate-row" style="margin-bottom:0;">
+              <input type="text" id="quickWaNumber" placeholder="e.g. 9876543210 or +91..." class="flex-1">
+              <button id="btnQuickWaSend" class="btn btn-secondary btn-sm" style="background:#22c55e; color:white; font-weight:700;">Send ➔</button>
+            </div>
+          </div>
+
+          <div class="wa-teammates-header" style="margin-top:10px;">
+            <span>Other Options:</span>
+          </div>
+
+          <button class="wa-option-btn default-option" id="btnWaGroup">
+            <span class="wa-option-icon">👥</span>
+            <div class="wa-option-text">
+              <strong>Open in WhatsApp (Choose Chat/Group)</strong>
+              <span>Manually pick any group or contact in WhatsApp</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btnManageTeammatesFromModal" class="btn-link">⚙️ Manage Teammates in Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

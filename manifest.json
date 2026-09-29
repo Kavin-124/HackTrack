@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "HackTrack — Universal Hackathon Deadline Tracker",
+  "version": "1.0.0",
+  "description": "Never miss a hackathon round or deadline! Auto-detects dates on Unstop, Devfolio, Devpost, HackerEarth & any page. 1-click Google Calendar & WhatsApp sync.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "HackTrack — Hackathon Deadline Tracker",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "activeTab",
+    "contextMenus",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://web.whatsapp.com/*"],
+      "js": ["scripts/whatsapp-auto-send.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
